@@ -1,4 +1,4 @@
-from flask import request
+from flask import request,jsonify
 import json
 from app import app
 
@@ -19,15 +19,18 @@ def hello():
     return json.dumps(obj)
 
 
-@app.route('/getSolution', methods=['POST','GET'])
+@app.route('/getSolution', methods=['POST', 'GET'])
 def getSolution():
     data = request.get_json()
     expr = data["expr"]
-    obj = {
-        "simplify": str(simplify(expr)),
-        "factor": str(factor(expr)),
-        "solve": str(solve(expr)),
-        "expand": str(expand(expr)),
-        "msg": "success"
-    }
-    return json.dumps(obj), 200
+    try:
+        obj = {
+            "simplify": str(simplify(expr)),
+            "factor": str(factor(expr)),
+            "solve": str(solve(expr)),
+            "expand": str(expand(expr)),
+            "msg": "success"
+        }
+        return json.dumps(obj), 200
+    except:
+        return jsonify({"msg":"failure"}),200
