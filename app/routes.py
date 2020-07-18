@@ -2,7 +2,7 @@ from flask import request
 import json
 from app import app
 
-from sympy import symbols, Function, simplify, factor, solve
+from sympy import symbols, Function, simplify, factor, solve, expand
 x, y, z, t = symbols('x y z t')
 k, m, n = symbols('k m n', integer=True)
 f, g, h = symbols('f g h', cls=Function)
@@ -16,18 +16,18 @@ def hello():
         "factor": str(factor(expr)),
         "solve": str(solve(expr))
     }
-    # print(obj["factor"])
     return json.dumps(obj)
 
 
-@app.route('/getSolution', methods=['GET'])
+@app.route('/getSolution', methods=['POST','GET'])
 def getSolution():
     data = request.get_json()
-    expr=data["expr"]
+    expr = data["expr"]
     obj = {
         "simplify": str(simplify(expr)),
         "factor": str(factor(expr)),
-        "solve": str(solve(expr))
+        "solve": str(solve(expr)),
+        "expand": str(expand(expr)),
+        "msg": "success"
     }
-    # print(obj["factor"])
-    return json.dumps(obj),200;
+    return json.dumps(obj), 200
